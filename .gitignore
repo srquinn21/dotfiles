@@ -11,5 +11,6 @@ vim/.vundles.local.bak
 vim/bundle
 vim/sessions
 vim/init.vim
+vim/plugged/*
 
 tags
