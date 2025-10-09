@@ -9,4 +9,5 @@
 call plug#begin('~/.vim/plugged')
 runtime appearance.plugin
 runtime project.plugin
+runtime rust.plugin
 call plug#end()

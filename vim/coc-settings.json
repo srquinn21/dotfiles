@@ -1,4 +1,6 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["*"]
+  "coc.preferences.formatOnSaveFiletypes": ["*"],
   // "eslint.autoFixOnSave": true
+  "rust-analyzer.server.path": "rust-analyzer",
+  "rust-analyzer.checkOnSave.command": "clippy"
 }
