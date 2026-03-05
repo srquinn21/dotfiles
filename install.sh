@@ -115,6 +115,15 @@ function install_zsh_config {
   log_done
 }
 
+function install_glow_config {
+  banner "Installing glow configuration"
+
+  mkdir -p $HOME/.config/glow
+  ln -nfs $dotfiles_dir/glow/onedark.json $HOME/.config/glow/onedark.json
+
+  log_done
+}
+
 ###############################################################################
 #  Task Runner
 ###############################################################################
@@ -123,6 +132,7 @@ install_packages
 install_vim_config
 set_zsh_to_default_shell
 install_zsh_config
+install_glow_config
 
 banner "Adding miscellaneous configurations"
 symlink_files $dotfiles_dir/git/
