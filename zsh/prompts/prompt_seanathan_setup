@@ -57,7 +57,7 @@ function prompt_seanathan_precmd {
   # Update SSH indicator (hidden inside tmux since status bar shows it)
   _prompt_seanathan_ssh=''
   if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]; then
-    _prompt_seanathan_ssh='%2G☁️%f '
+    _prompt_seanathan_ssh='%F{7}☁️ %f '
   fi
 
   if (( $+functions[git-dir] )); then
