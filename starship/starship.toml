@@ -1,0 +1,40 @@
+format = """$custom\
+$character"""
+
+right_format = """$git_branch\
+$git_commit\
+$git_status"""
+
+[character]
+success_symbol = "[❯](bold blue)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold purple)"
+
+[git_branch]
+format = " [$branch](bold green)"
+
+[git_commit]
+format = " [$hash](bold yellow)"
+only_detached = true
+tag_disabled = true
+
+[git_status]
+format = '([$all_status$ahead_behind]($style))'
+style = ""
+ahead = " [⬆](bold purple)"
+behind = " [⬇](bold purple)"
+diverged = " [⬆](bold purple) [⬇](bold purple)"
+staged = " [✚](bold green)"
+deleted = " [✖](bold red)"
+modified = " [✱](bold blue)"
+renamed = " [➜](bold purple)"
+untracked = " [◼](bold white)"
+stashed = " [✭](bold cyan)"
+conflicted = " [═](bold yellow)"
+
+[custom.ssh]
+command = "echo ☁️"
+when = '[[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]'
+format = "[$output ]($style)"
+style = "white"
+shell = ["zsh", "-d", "-f"]

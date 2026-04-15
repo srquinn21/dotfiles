@@ -1,6 +1,7 @@
 # Terminal & Shell
 brew "zsh"
 brew "tmux"
+brew "starship"
 cask "ghostty" if OS.mac?
 
 # Editor

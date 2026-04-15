@@ -65,14 +65,15 @@ else
   already_installed "zsh (default shell)"
 fi
 
-if [[ ! -d $HOME/.zprezto ]]; then
-  git clone --recursive https://github.com/sorin-ionescu/prezto.git "$HOME/.zprezto"
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 else
-  git -C "$HOME/.zprezto" pull --recurse-submodules
+  git -C "$ZINIT_HOME" pull
 fi
 
 symlink "$dotfiles_dir/zsh/zshrc" "$HOME/.zshrc"
-symlink "$dotfiles_dir/zsh/zpreztorc" "$HOME/.zpreztorc"
 log_done
 
 ###############################################################################
@@ -138,6 +139,7 @@ log_done
 banner "Configuring tools"
 
 symlink "$dotfiles_dir/ghostty" "$HOME/.config/ghostty"
+symlink "$dotfiles_dir/starship/starship.toml" "$HOME/.config/starship.toml"
 symlink "$dotfiles_dir/glow" "$HOME/.config/glow"
 symlink "$dotfiles_dir/bat" "$HOME/.config/bat"
 symlink "$dotfiles_dir/mise" "$HOME/.config/mise"
