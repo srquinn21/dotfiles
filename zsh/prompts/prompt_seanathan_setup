@@ -54,12 +54,6 @@ function prompt_seanathan_precmd {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
 
-  # Update SSH indicator (hidden inside tmux since status bar shows it)
-  _prompt_seanathan_ssh=''
-  if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]; then
-    _prompt_seanathan_ssh='%F{7}☁ %f '
-  fi
-
   if (( $+functions[git-dir] )); then
     local new_git_root="$(git-dir 2> /dev/null)"
     if [[ $new_git_root != $_seanathan_cur_git_root ]]; then
@@ -110,7 +104,11 @@ function prompt_seanathan_setup {
   _seanathan_cur_git_root=''
   _prompt_seanathan_git=''
 
+  # SSH cloud indicator (hidden inside tmux since status bar shows it)
   _prompt_seanathan_ssh=''
+  if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]; then
+    _prompt_seanathan_ssh='%F{7}☁ %f '
+  fi
 
   PROMPT='${_prompt_seanathan_ssh}${editor_info[keymap]} '
   RPROMPT='${_prompt_seanathan_git}'
