@@ -1,4 +1,3 @@
-[core]
 [color]
   ui = true
 [color "branch"]
@@ -14,13 +13,10 @@
   pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
 [mergetool]
   prompt = false
-[mergetool "mvimdiff"]
-  cmd="mvim -c 'Gdiff' $MERGED"     # use fugitive.vim for 3-way merge
-  keepbackup=false
 [merge]
   summary = true
   verbosity = 1
-  tool = mvimdiff
+  tool = nvimdiff
 [apply]
   whitespace = nowarn
 [branch]
@@ -31,7 +27,7 @@
   default = upstream
 [core]
   autocrlf = false
-  editor = vim
+  editor = nvim
 	pager = less -FMRiX
 	excludesfile = ~/.gitignore
 [advice]
@@ -49,8 +45,3 @@
   path = ~/.gitconfig.user
 [alias]
 	dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
-[init]
-[commit]
-[user]
-	name = ⛵️ Sean Quinn
-	email = srquinn@amazon.com

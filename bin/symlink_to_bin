@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-cd $HOME/bin
-for file in $1; do 
-  echo "Adding $file to $HOME/bin"
-  ln -s $file $(basename ${file%.*})
-done

@@ -1,7 +1,0 @@
-zsh
-git
-tmux
-nvm
-the_silver_searcher
-glow
-fzf

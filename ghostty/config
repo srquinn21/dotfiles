@@ -1,0 +1,7 @@
+font-family = MesloLGS NF
+font-size = 14
+font-thicken = true
+freetype-load-flags = no-force-autohint
+theme = One Double Dark
+shell-integration-features = no-cursor
+cursor-style-blink = false

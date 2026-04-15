@@ -52,11 +52,11 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'sheerun/vim-polyglot'
 Plug 'rakr/vim-one'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'jasdel/vim-smithy'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jparise/vim-graphql'
+Plug 'jasdel/vim-smithy'
 
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-git'
@@ -64,6 +64,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'preservim/nerdtree'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'rust-lang/rust.vim'
+Plug 'jclsn/glow.vim'
 
 call plug#end()
 
