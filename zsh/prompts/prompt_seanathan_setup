@@ -105,12 +105,12 @@ function prompt_seanathan_setup {
   _prompt_seanathan_git=''
 
   # SSH cloud indicator (hidden inside tmux since status bar shows it)
-  typeset -g _prompt_seanathan_ssh=''
+  local ssh_indicator=''
   if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]; then
-    _prompt_seanathan_ssh='%F{7}☁ %f '
+    ssh_indicator='%F{7}☁ %f '
   fi
 
-  PROMPT='${_prompt_seanathan_ssh}${editor_info[keymap]} '
+  PROMPT='${ssh_indicator}${editor_info[keymap]} '
   RPROMPT='${_prompt_seanathan_git}'
   SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
 }
