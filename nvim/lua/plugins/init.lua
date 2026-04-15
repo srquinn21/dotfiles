@@ -65,7 +65,7 @@ return {
 
   -- Git
   { "tpope/vim-fugitive" },
-  { "lewis6741/gitsigns.nvim", opts = {} },
+  { "lewis6991/gitsigns.nvim", opts = {} },
 
   -- Keymap discoverability
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
