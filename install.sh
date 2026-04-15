@@ -141,6 +141,8 @@ symlink "$dotfiles_dir/ghostty" "$HOME/.config/ghostty"
 symlink "$dotfiles_dir/glow" "$HOME/.config/glow"
 symlink "$dotfiles_dir/bat" "$HOME/.config/bat"
 symlink "$dotfiles_dir/mise" "$HOME/.config/mise"
+symlink "$dotfiles_dir/prettier/.prettierrc" "$HOME/.prettierrc"
+symlink "$dotfiles_dir/eslint/eslint.config.mjs" "$HOME/eslint.config.mjs"
 log_done
 
 ###############################################################################
@@ -158,6 +160,20 @@ fi
 
 rustup component add clippy rust-analyzer 2>/dev/null
 
+log_done
+
+###############################################################################
+# Node globals
+###############################################################################
+
+banner "Installing Node globals"
+
+if command -v npm &>/dev/null; then
+  npm ls -g prettier &>/dev/null || npm install -g prettier
+  npm ls -g eslint &>/dev/null || npm install -g eslint
+else
+  echo "npm not found — skipping global installs (run 'mise install' first)"
+fi
 log_done
 
 ###############################################################################

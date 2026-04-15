@@ -171,7 +171,7 @@ fi
 if [ -d ~/.zsh-completions ]; then
   for completion in ~/.zsh-completions/*
   do
-    if [ -z $completion ]; then
+    if [ -n $completion ]; then
       source "$completion"
     fi
   done

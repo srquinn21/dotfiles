@@ -1,28 +1,25 @@
-# OSX       taken from:
-# https://github.com/github/gitignore/blob/master/Global/OSX.gitignore
-# ----------------------------------------------------------------------------------------------
+# macOS
 .DS_Store
-# Thumbnails
 ._*
-# Files that might appear on external disk
-.Spotlight-V100 .Trashes
+.Spotlight-V100
+.Trashes
 
-# Vim       taken from:
-# https://github.com/github/gitignore/blob/master/Global/vim.gitignore
-# ----------------------------------------------------------------------------------------------
-[._]*.s[a-w][a-z] [._]s[a-w][a-z] *.un~ Session.vim .netrwhist *~
+# Vim / Neovim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
 
 # SASS
-# ----------------------------------------------------------------------------------------------
 .sass-cache
 
 # IDEA
-# ----------------------------------------------------------------------------------------------
 *.iml
 .idea
 
 # Typical Builds
-# ----------------------------------------------------------------------------------------------
 build
 node_modules
 .attach_pid*

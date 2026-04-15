@@ -21,3 +21,6 @@ brew "zoxide"
 brew "bat"
 brew "glow"
 brew "eza"
+
+# Formatters & Linters
+brew "stylua"

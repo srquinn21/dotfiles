@@ -13,13 +13,6 @@ map("n", ",gz", "<C-w>o", { silent = true })
 -- Toggle search highlight
 map("n", "<Space>", ":set hls!<CR>", { silent = true })
 
--- Strip trailing whitespace
-map("n", ",w", function()
-  local pos = vim.api.nvim_win_get_cursor(0)
-  vim.cmd([[%s/\s\+$//e]])
-  vim.api.nvim_win_set_cursor(0, pos)
-end, { silent = true })
-
 -- Smart close window/buffer
 map("n", "Q", function()
   local wins = vim.fn.filter(vim.fn.range(1, vim.fn.winnr("$")),
