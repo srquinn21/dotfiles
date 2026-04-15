@@ -9,7 +9,6 @@ brew "neovim"
 # Development
 brew "git"
 brew "mise"
-brew "rustup"
 
 # Search & Navigation
 brew "ripgrep"
