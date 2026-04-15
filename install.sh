@@ -87,6 +87,21 @@ symlink "$dotfiles_dir/git/gitignore" "$HOME/.gitignore"
 log_done
 
 ###############################################################################
+# Ghostty terminfo
+###############################################################################
+
+banner "Configuring Ghostty terminfo"
+
+if ! infocmp xterm-ghostty &>/dev/null; then
+  curl -fsSL https://raw.githubusercontent.com/ghostty-org/ghostty/main/src/terminfo/ghostty.terminfo \
+    | tic -x -o "$HOME/.terminfo" - 2>/dev/null \
+    && echo "Installed xterm-ghostty terminfo"
+else
+  already_installed "xterm-ghostty terminfo"
+fi
+log_done
+
+###############################################################################
 # Tmux
 ###############################################################################
 
@@ -121,11 +136,6 @@ log_done
 ###############################################################################
 
 banner "Configuring tools"
-
-# Install Ghostty terminfo so tmux can find it
-if command -v infocmp &>/dev/null && infocmp xterm-ghostty &>/dev/null; then
-  infocmp xterm-ghostty | tic -x -o "$HOME/.terminfo" - 2>/dev/null
-fi
 
 symlink "$dotfiles_dir/ghostty" "$HOME/.config/ghostty"
 symlink "$dotfiles_dir/glow" "$HOME/.config/glow"
