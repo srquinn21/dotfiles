@@ -16,7 +16,9 @@ brew "ripgrep"
 brew "fd"
 brew "fzf"
 brew "tree"
+brew "zoxide"
 
 # File Viewing
 brew "bat"
 brew "glow"
+brew "eza"

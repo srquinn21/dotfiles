@@ -28,11 +28,20 @@ return {
     },
   },
 
+  -- Context-aware comments (correct comment style in JSX/TSX)
+  { "JoosepAlviste/nvim-ts-context-commentstring", opts = {} },
+
   -- Fuzzy finder (replaces CtrlP)
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
+    config = function()
+      require("telescope").load_extension("fzf")
+    end,
     keys = {
       { "<C-p>", "<cmd>Telescope find_files<cr>" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
@@ -56,9 +65,10 @@ return {
 
   -- Git
   { "tpope/vim-fugitive" },
+  { "lewis6741/gitsigns.nvim", opts = {} },
 
-  -- Whitespace
-  { "ntpeters/vim-better-whitespace" },
+  -- Keymap discoverability
+  { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
   -- Markdown preview
   { "ellisonleao/glow.nvim", cmd = "Glow", opts = {} },
