@@ -12,43 +12,42 @@ return {
     },
   },
 
-  -- LSP config
+  -- LSP config (native vim.lsp.config, Neovim 0.11+)
   {
     "neovim/nvim-lspconfig",
     dependencies = { "williamboman/mason-lspconfig.nvim" },
     config = function()
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local on_attach = function(_, bufnr)
-        local opts = { buffer = bufnr, silent = true }
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
-        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-        vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, opts)
-      end
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(ev)
+          local opts = { buffer = ev.buf, silent = true }
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+          vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+          vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, opts)
+        end,
+      })
 
-      lspconfig.ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.rust_analyzer.setup({
+      vim.lsp.config("ts_ls", { capabilities = capabilities })
+      vim.lsp.config("rust_analyzer", {
         capabilities = capabilities,
-        on_attach = on_attach,
         settings = {
-          ["rust-analyzer"] = {
-            checkOnSave = { command = "clippy" },
-          },
+          ["rust-analyzer"] = { checkOnSave = { command = "clippy" } },
         },
       })
-      lspconfig.eslint.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.lua_ls.setup({
+      vim.lsp.config("eslint", { capabilities = capabilities })
+      vim.lsp.config("lua_ls", {
         capabilities = capabilities,
-        on_attach = on_attach,
         settings = { Lua = { diagnostics = { globals = { "vim" } } } },
       })
+
+      vim.lsp.enable({ "ts_ls", "rust_analyzer", "eslint", "lua_ls" })
     end,
   },
 

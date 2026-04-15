@@ -21,13 +21,11 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "typescript", "tsx", "javascript", "rust", "json", "yaml", "toml", "markdown", "bash", "html", "css", "graphql" },
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end,
+    opts = {
+      ensure_installed = { "lua", "typescript", "tsx", "javascript", "rust", "json", "yaml", "toml", "markdown", "bash", "html", "css", "graphql" },
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
   },
 
   -- Fuzzy finder (replaces CtrlP)
@@ -63,5 +61,5 @@ return {
   { "ntpeters/vim-better-whitespace" },
 
   -- Markdown preview
-  { "jclsn/glow.vim" },
+  { "ellisonleao/glow.nvim", cmd = "Glow", opts = {} },
 }
