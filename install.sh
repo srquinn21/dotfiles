@@ -99,7 +99,7 @@ else
 fi
 
 symlink "$dotfiles_dir/tmux/tmux.conf" "$HOME/.tmux.conf"
-TERM=xterm-256color TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins" "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+TERM=xterm-256color "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 log_done
 
 ###############################################################################
