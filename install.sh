@@ -96,7 +96,9 @@ if ! infocmp xterm-ghostty &>/dev/null; then
   tic -x -o "$HOME/.terminfo" "$dotfiles_dir/ghostty/xterm-ghostty.terminfo"
   echo "Installed xterm-ghostty terminfo"
 else
-  already_installed "xterm-ghostty terminfo"
+  # Re-export latest terminfo from local Ghostty install
+  infocmp -x xterm-ghostty > "$dotfiles_dir/ghostty/xterm-ghostty.terminfo"
+  already_installed "xterm-ghostty terminfo (re-exported)"
 fi
 log_done
 
