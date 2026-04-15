@@ -93,9 +93,8 @@ log_done
 banner "Configuring Ghostty terminfo"
 
 if ! infocmp xterm-ghostty &>/dev/null; then
-  curl -fsSL https://raw.githubusercontent.com/ghostty-org/ghostty/main/src/terminfo/ghostty.terminfo \
-    | tic -x -o "$HOME/.terminfo" - 2>/dev/null \
-    && echo "Installed xterm-ghostty terminfo"
+  tic -x -o "$HOME/.terminfo" "$dotfiles_dir/ghostty/xterm-ghostty.terminfo"
+  echo "Installed xterm-ghostty terminfo"
 else
   already_installed "xterm-ghostty terminfo"
 fi
