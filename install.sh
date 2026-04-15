@@ -151,9 +151,12 @@ banner "Configuring Rust"
 
 if ! command -v rustup &>/dev/null; then
   rustup-init -y --no-modify-path
+  source "$HOME/.cargo/env"
 else
   already_installed "rustup"
 fi
+
+rustup component add clippy rust-analyzer 2>/dev/null
 
 log_done
 
