@@ -3,6 +3,7 @@ brew "zsh"
 brew "tmux"
 brew "starship"
 cask "ghostty" if OS.mac?
+cask "font-meslo-lg-nerd-font" if OS.mac?
 
 # Editor
 brew "neovim"

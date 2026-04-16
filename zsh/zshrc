@@ -188,22 +188,6 @@ if [ -n "$(/bin/ls ~/.zshrc.d)" ]; then
 fi
 
 #
-# Dedupe PATH
-#
-
-dedupe_path() {
-  typeset -a paths result
-  paths=($path)
-  while [[ ${#paths} -gt 0 ]]; do
-    p="${paths[1]}"
-    shift paths
-    [[ -z ${paths[(r)$p]} ]] && result+="$p"
-  done
-  export PATH=${(j+:+)result}
-}
-dedupe_path
-
-#
 # Compile completions in background
 #
 
