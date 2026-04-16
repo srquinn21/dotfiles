@@ -17,15 +17,15 @@ autoload -Uz compinit
 compinit -C
 
 #
-# Plugins (turbo-loaded)
+# Plugins
 #
 
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-history-substring-search
+
 zinit light-mode wait lucid for \
-  zsh-users/zsh-completions \
-  atload"_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
-  zsh-users/zsh-history-substring-search \
-  zsh-users/zsh-syntax-highlighting
+  zsh-users/zsh-completions
 
 #
 # Vi Mode
