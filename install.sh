@@ -143,7 +143,9 @@ else
 fi
 
 symlink "$dotfiles_dir/tmux/tmux.conf" "$HOME/.tmux.conf"
-if TERM=xterm-256color tmux start-server \; kill-server 2>/dev/null; then
+if tmux list-sessions &>/dev/null; then
+  echo "tmux is running — skipping TPM install (use prefix + I to install plugins)"
+elif TERM=xterm-256color tmux start-server \; kill-server 2>/dev/null; then
   TERM=xterm-256color "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 else
   echo "tmux unavailable — TPM plugins will install on first tmux launch (prefix + I)"
