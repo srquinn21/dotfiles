@@ -21,9 +21,9 @@ tag_disabled = true
 [git_status]
 format = '([$all_status$ahead_behind]($style))'
 style = ""
-ahead = " [⬆](bold purple)"
-behind = " [⬇](bold purple)"
-diverged = " [⬆](bold purple) [⬇](bold purple)"
+ahead = " [](bold purple)"
+behind = " [](bold purple)"
+diverged = " [](bold purple) [](bold purple)"
 staged = " [✚](bold green)"
 deleted = " [✖](bold red)"
 modified = " [✱](bold blue)"

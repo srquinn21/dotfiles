@@ -54,6 +54,34 @@ brew bundle --file="$dotfiles_dir/Brewfile"
 log_done
 
 ###############################################################################
+# Nerd Font (MesloLGS NF)
+###############################################################################
+
+banner "Installing Nerd Font (MesloLGS NF)"
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
+    brew install --cask font-meslo-lg-nerd-font
+  else
+    already_installed "MesloLGS Nerd Font"
+  fi
+else
+  font_dir="$HOME/.local/share/fonts"
+  if ! fc-list | grep -qi "MesloLGS"; then
+    mkdir -p "$font_dir"
+    nf_version="v3.3.0"
+    nf_url="https://github.com/ryanoasis/nerd-fonts/releases/download/${nf_version}/Meslo.tar.xz"
+    echo "Downloading MesloLGS Nerd Font ${nf_version}..."
+    curl -fsSL "$nf_url" | tar -xJ -C "$font_dir"
+    fc-cache -f "$font_dir"
+  else
+    already_installed "MesloLGS Nerd Font"
+  fi
+fi
+
+log_done
+
+###############################################################################
 # Shell
 ###############################################################################
 
