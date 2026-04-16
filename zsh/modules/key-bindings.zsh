@@ -1,9 +1,11 @@
 # Map 'jj' to ESC when in insert mode
 bindkey -M viins 'jj' vi-cmd-mode
 
-# Search backwards and forwards with a pattern
-bindkey -M vicmd '/' history-incremental-pattern-search-backward
-bindkey -M vicmd '?' history-incremental-pattern-search-forward
+# History substring search (type partial command, then arrow/j/k to cycle)
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # Edit command in vim
 autoload -Uz edit-command-line

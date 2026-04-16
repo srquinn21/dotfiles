@@ -33,7 +33,7 @@ stashed = " [✭](bold cyan)"
 conflicted = " [═](bold yellow)"
 
 [custom.ssh]
-command = "echo ☁️"
+command = "echo "
 when = '[[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]'
 format = "[$output ]($style)"
 style = "white"
