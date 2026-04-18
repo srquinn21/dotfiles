@@ -70,6 +70,11 @@ return {
   -- Keymap discoverability
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
-  -- Markdown preview
-  { "ellisonleao/glow.nvim", cmd = "Glow", opts = {} },
+  -- Inline markdown rendering
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {},
+  },
 }

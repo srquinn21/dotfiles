@@ -60,8 +60,12 @@ opt.wildignore = "*.o,*.obj,*~,*vim/backups*,*sass-cache*,*DS_Store*,vendor/rail
 -- History
 opt.history = 1000
 
--- Markdown wrapping
+
+
+-- Markdown: hard-wrap prose at 80 chars, tables stay on one line
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
-  callback = function() vim.opt_local.wrap = true end,
+  callback = function()
+    vim.opt_local.textwidth = 80
+  end,
 })

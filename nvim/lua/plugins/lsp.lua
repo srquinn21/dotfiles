@@ -8,7 +8,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "ts_ls", "rust_analyzer", "eslint", "lua_ls" },
+      ensure_installed = { "ts_ls", "rust_analyzer", "eslint", "lua_ls", "markdown_oxide" },
     },
   },
 
@@ -46,8 +46,9 @@ return {
         capabilities = capabilities,
         settings = { Lua = { diagnostics = { globals = { "vim" } } } },
       })
+      vim.lsp.config("markdown_oxide", { capabilities = capabilities })
 
-      vim.lsp.enable({ "ts_ls", "rust_analyzer", "eslint", "lua_ls" })
+      vim.lsp.enable({ "ts_ls", "rust_analyzer", "eslint", "lua_ls", "markdown_oxide" })
     end,
   },
 
