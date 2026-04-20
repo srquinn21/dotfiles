@@ -5,6 +5,9 @@ brew "starship"
 cask "ghostty" if OS.mac?
 cask "font-meslo-lg-nerd-font" if OS.mac?
 
+# System Utilities
+brew "btop"
+
 # Editor
 brew "neovim"
 
