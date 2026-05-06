@@ -1,7 +1,7 @@
 # Terminal & Shell
 brew "zsh"
 brew "tmux"
-brew "mosh"
+brew "et"
 brew "starship"
 cask "ghostty" if OS.mac?
 cask "font-meslo-lg-nerd-font" if OS.mac?
