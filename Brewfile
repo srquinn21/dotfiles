@@ -15,6 +15,9 @@ brew "neovim"
 # Development
 brew "git"
 brew "mise"
+brew "zig"
+tap "oven-sh/bun"
+brew "bun"
 
 # Search & Navigation
 brew "ripgrep"
