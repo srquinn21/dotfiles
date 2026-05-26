@@ -225,6 +225,7 @@ symlink "$dotfiles_dir/ghostty" "$HOME/.config/ghostty"
 symlink "$dotfiles_dir/starship/starship.toml" "$HOME/.config/starship.toml"
 symlink "$dotfiles_dir/glow" "$HOME/.config/glow"
 symlink "$dotfiles_dir/bat" "$HOME/.config/bat"
+symlink "$dotfiles_dir/fd" "$HOME/.config/fd"
 symlink "$dotfiles_dir/btop" "$HOME/.config/btop"
 # Only config.toml: herdr keeps sockets and session state next to it.
 mkdir -p "$HOME/.config/herdr"

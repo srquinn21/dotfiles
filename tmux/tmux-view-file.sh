@@ -1,9 +1,7 @@
 #!/bin/sh
-fd --type f --hidden --exclude .git | fzf \
-  --preview 'bat --color=always --style=plain {}' \
-  --bind 'enter:execute(
-    case {} in
-      *.md|*.markdown) glow -s ~/.config/glow/onedark.json -p {} ;;
-      *) bat --paging=always --style=full --color=always {} ;;
-    esac
-  )+abort'
+file=$(fd --type f --hidden --no-ignore-vcs --exclude .git | fzf \
+  --preview 'bat --color=always --style=plain {}')
+
+[ -z "$file" ] && exit 0
+
+bat --paging=always --pager=builtin --style=full --color=always "$file"
