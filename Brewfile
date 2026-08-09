@@ -11,6 +11,7 @@ brew "btop"
 
 # Editor
 brew "neovim"
+cask "obsidian"
 
 # Development
 brew "git"
@@ -18,6 +19,7 @@ brew "mise"
 brew "zig"
 tap "oven-sh/bun"
 brew "bun"
+cask "claude-code"
 
 # Search & Navigation
 brew "ripgrep"
