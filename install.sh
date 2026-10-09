@@ -32,6 +32,29 @@ symlink() {
 }
 
 ###############################################################################
+# System prerequisites (Linux)
+###############################################################################
+
+# The one exception to Homebrew-first. A C toolchain is needed by Homebrew
+# itself and as Rust's linker, and the login shell has to come from the
+# system package manager so it survives Homebrew breaking.
+if [[ "$(uname)" != "Darwin" ]] && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]]; }; then
+  banner "Installing system prerequisites"
+
+  if command -v apt-get &>/dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y build-essential procps curl file git zsh
+  elif command -v dnf &>/dev/null; then
+    sudo dnf group install -y development-tools
+    sudo dnf install -y procps-ng curl file git zsh
+  else
+    echo "warning: unknown package manager -- install a C toolchain and zsh yourself"
+  fi
+
+  log_done
+fi
+
+###############################################################################
 # Homebrew
 ###############################################################################
 
@@ -96,17 +119,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 else
   login_zsh=/usr/bin/zsh
   current_shell="$(getent passwd "$USER" | cut -d: -f7)"
-
-  # The one exception to Homebrew-first: the login shell has to come from
-  # the system package manager so it survives Homebrew breaking. Most
-  # distros don't ship zsh by default.
-  if [[ ! -x $login_zsh ]]; then
-    if command -v apt-get &>/dev/null; then
-      sudo apt-get update && sudo apt-get install -y zsh
-    elif command -v dnf &>/dev/null; then
-      sudo dnf install -y zsh
-    fi
-  fi
 fi
 
 if [[ ! -x $login_zsh ]]; then
