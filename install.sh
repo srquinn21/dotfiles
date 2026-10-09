@@ -173,10 +173,21 @@ else
 fi
 
 symlink "$dotfiles_dir/tmux/tmux.conf" "$HOME/.tmux.conf"
-if tmux list-sessions &>/dev/null; then
-  echo "tmux is running — skipping TPM install (use prefix + I to install plugins)"
-elif TERM=xterm-256color tmux start-server \; kill-server 2>/dev/null; then
-  TERM=xterm-256color "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+if command -v tmux &>/dev/null; then
+  # Install plugins against a throwaway tmux server on its own socket. A
+  # server that's already running may predate ~/.tmux.conf, and TPM would
+  # read its stale settings and install nothing.
+  tpm_tmpdir="$(mktemp -d)"
+  env -u TMUX TMUX_TMPDIR="$tpm_tmpdir" TERM=xterm-256color \
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+  env -u TMUX TMUX_TMPDIR="$tpm_tmpdir" tmux kill-server 2>/dev/null || true
+  rm -rf "$tpm_tmpdir"
+
+  # tmux only reads its config at server start, so apply it to a running one
+  if tmux list-sessions &>/dev/null; then
+    tmux source-file "$HOME/.tmux.conf"
+    echo "Reloaded config into the running tmux server"
+  fi
 else
   echo "tmux unavailable — TPM plugins will install on first tmux launch (prefix + I)"
 fi
