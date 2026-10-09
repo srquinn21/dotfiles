@@ -1,0 +1,22 @@
+#
+# Homebrew zsh handoff
+#
+# The login shell stays the system zsh so a broken or removed Homebrew can
+# never lock us out (especially over SSH). Interactive logins hop over to
+# Homebrew's zsh when it's installed. Shells given a command (`zsh -lc cmd`,
+# `zsh -lic cmd` as VS Code does, scp) are left alone: exec would drop it.
+#
+
+if [[ -o interactive && -z $ZSH_EXECUTION_STRING && -z $ZSH_BREW_HANDOFF ]]; then
+  for brew_zsh in \
+    /opt/homebrew/bin/zsh \
+    /home/linuxbrew/.linuxbrew/bin/zsh; do
+    if [[ -x $brew_zsh ]]; then
+      # Marks the handoff as done so the exec'd shell doesn't loop.
+      export ZSH_BREW_HANDOFF=1
+      export SHELL=$brew_zsh
+      exec "$brew_zsh" -l
+    fi
+  done
+  unset brew_zsh
+fi

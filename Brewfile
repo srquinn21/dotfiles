@@ -16,6 +16,7 @@ cask "obsidian"
 # Development
 brew "git"
 brew "mise"
+brew "rustup"
 brew "zig"
 tap "oven-sh/bun"
 brew "bun"

@@ -23,3 +23,5 @@ Session.vim
 build
 node_modules
 .attach_pid*
+
+**/.claude/settings.local.json

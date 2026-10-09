@@ -87,8 +87,34 @@ log_done
 
 banner "Configuring zsh"
 
-if [[ $SHELL != *"zsh" ]]; then
-  chsh -s "$(which zsh)"
+# Log in with the system zsh, never Homebrew's: if Homebrew's zsh goes
+# missing, a login shell pointing at it locks you out of SSH.
+# ~/.zprofile hands interactive logins off to Homebrew's zsh instead.
+if [[ "$(uname)" == "Darwin" ]]; then
+  login_zsh=/bin/zsh
+  current_shell="$(dscl . -read "$HOME" UserShell | awk '{print $2}')"
+else
+  login_zsh=/usr/bin/zsh
+  current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+
+  # The one exception to Homebrew-first: the login shell has to come from
+  # the system package manager so it survives Homebrew breaking. Most
+  # distros don't ship zsh by default.
+  if [[ ! -x $login_zsh ]]; then
+    if command -v apt-get &>/dev/null; then
+      sudo apt-get update && sudo apt-get install -y zsh
+    elif command -v dnf &>/dev/null; then
+      sudo dnf install -y zsh
+    fi
+  fi
+fi
+
+if [[ ! -x $login_zsh ]]; then
+  echo "warning: no system zsh at $login_zsh -- leaving the login shell as $current_shell."
+  echo "         Install zsh with your system package manager, then re-run to log in with zsh."
+elif [[ $current_shell != "$login_zsh" ]]; then
+  # sudo because cloud users like Lightsail's `ubuntu` have no password
+  sudo chsh -s "$login_zsh" "$USER"
 else
   already_installed "zsh (default shell)"
 fi
@@ -102,6 +128,7 @@ else
 fi
 
 symlink "$dotfiles_dir/zsh/zshrc" "$HOME/.zshrc"
+symlink "$dotfiles_dir/zsh/zprofile" "$HOME/.zprofile"
 log_done
 
 ###############################################################################
@@ -123,10 +150,13 @@ banner "Configuring Ghostty terminfo"
 if ! infocmp xterm-ghostty &>/dev/null; then
   tic -x -o "$HOME/.terminfo" "$dotfiles_dir/ghostty/xterm-ghostty.terminfo"
   echo "Installed xterm-ghostty terminfo"
-else
-  # Re-export latest terminfo from local Ghostty install
+elif [[ "$(uname)" == "Darwin" ]]; then
+  # Re-export latest terminfo from local Ghostty install. Mac only: on other
+  # hosts it would just echo back our own copy and dirty the repo.
   infocmp -x xterm-ghostty > "$dotfiles_dir/ghostty/xterm-ghostty.terminfo"
   already_installed "xterm-ghostty terminfo (re-exported)"
+else
+  already_installed "xterm-ghostty terminfo"
 fi
 log_done
 
