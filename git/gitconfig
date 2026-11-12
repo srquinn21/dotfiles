@@ -35,6 +35,10 @@
 	algorithm = patience
 [rerere]
 	enabled = true
+[user]
+	name = Sean Quinn ⛵
+	email = srquinn21@gmail.com
+# Optional per-machine overrides (e.g. a work email)
 [include]
 	path = ~/.gitconfig.user
 [alias]

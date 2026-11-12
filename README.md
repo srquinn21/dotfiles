@@ -23,15 +23,14 @@ git clone <repo-url> $HOME/.dotfiles
 Machine-specific config goes in `$HOME/.dotfiles-local`:
 
 - `zsh/*.zsh` — sourced automatically after main modules
-- `git/user.gitconfig` — included via `~/.gitconfig.user`
 - `install.sh` — runs at the end of the main install
 
-### Configure Git Identity
+### Git Identity
 
-Create `~/.gitconfig.user`:
+Identity is set in `git/gitconfig`. To override it on a single machine
+(e.g. a work email), create `~/.gitconfig.user`:
 
 ```gitconfig
 [user]
-  name = Your Name
-  email = you@example.com
+  email = you@work.com
 ```
