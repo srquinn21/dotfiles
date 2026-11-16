@@ -1,0 +1,9 @@
+onboarding = false
+
+# Kanban board of agents: Needs you | Working | Done.
+[[keys.command]]
+key = "prefix+a"
+type = "popup"
+command = "~/.dotfiles/herdr/agent-board"
+width = "90%"
+height = "85%"

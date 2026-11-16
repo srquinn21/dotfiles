@@ -14,6 +14,8 @@ brew "neovim"
 cask "obsidian"
 
 # Development
+brew "herdr"
+cask "herdr-app" if OS.mac?
 brew "git"
 brew "mise"
 brew "rustup"

@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""Kanban view of herdr agents: Needs you | Working | Done.
+
+Polls `herdr api snapshot` once a second. hjkl/arrows move, enter focuses the
+selected agent and exits, q/esc exits. Meant to run as a herdr popup.
+"""
+import curses
+import json
+import os
+import subprocess
+import time
+
+COLUMNS = [
+    ("Needs you", ("blocked",)),
+    ("Working", ("working",)),
+    ("Done", ("done", "idle", "unknown")),
+]
+CARD_HEIGHT = 5  # border + 3 lines of content + border
+REFRESH_SECONDS = 1.0
+
+
+def herdr(*args):
+    out = subprocess.run(["herdr", *args], capture_output=True, text=True)
+    if out.returncode != 0:
+        raise RuntimeError(out.stderr.strip() or out.stdout.strip())
+    return json.loads(out.stdout)
+
+
+def load_columns():
+    snap = herdr("api", "snapshot")["result"]["snapshot"]
+    workspaces = {w["workspace_id"]: w["label"] for w in snap["workspaces"]}
+    tabs = {t["tab_id"]: t["label"] for t in snap["tabs"]}
+    columns = [[] for _ in COLUMNS]
+    for agent in snap["agents"]:
+        status = agent.get("agent_status", "unknown")
+        index = next((i for i, (_, states) in enumerate(COLUMNS) if status in states), 2)
+        columns[index].append({
+            "pane_id": agent["pane_id"],
+            "status": status,
+            "title": agent.get("terminal_title_stripped") or agent["agent"],
+            "where": f'{workspaces.get(agent["workspace_id"], "?")} · tab {tabs.get(agent["tab_id"], "?")}',
+            "meta": f'{agent["agent"]} · {os.path.basename(agent.get("foreground_cwd") or agent["cwd"])}',
+        })
+    for cards in columns:
+        cards.sort(key=lambda c: c["pane_id"])
+    return columns
+
+
+def clip(text, width):
+    return text if len(text) <= width else text[: max(width - 1, 0)] + "…"
+
+
+def draw_card(win, y, x, w, card, selected, color):
+    attr = curses.color_pair(color) | (curses.A_BOLD if selected else curses.A_DIM)
+    inner = w - 4
+    win.attron(attr)
+    win.addstr(y, x, "╭" + "─" * (w - 2) + "╮")
+    for row in range(1, CARD_HEIGHT - 1):
+        win.addstr(y + row, x, "│")
+        win.addstr(y + row, x + w - 1, "│")
+    win.addstr(y + CARD_HEIGHT - 1, x, "╰" + "─" * (w - 2) + "╯")
+    win.attroff(attr)
+    win.addstr(y + 1, x + 2, clip(card["title"], inner), curses.A_BOLD if selected else 0)
+    win.addstr(y + 2, x + 2, clip(card["where"], inner))
+    status = "" if card["status"] in ("blocked", "working", "done") else f' · {card["status"]}'
+    win.addstr(y + 3, x + 2, clip(card["meta"] + status, inner), curses.A_DIM)
+
+
+def draw(stdscr, columns, sel, error):
+    stdscr.erase()
+    height, width = stdscr.getmaxyx()
+    col_w = width // len(COLUMNS)
+    for i, ((name, _), cards) in enumerate(zip(COLUMNS, columns)):
+        x = i * col_w
+        header = f" {name} ({len(cards)}) "
+        stdscr.addstr(0, x + 1, clip(header, col_w - 2), curses.color_pair(i + 1) | curses.A_BOLD)
+        fits = max((height - 3) // CARD_HEIGHT, 0)
+        # Scroll the selected column so its selected card stays visible.
+        start = max(0, sel[1] - fits + 1) if i == sel[0] else 0
+        for j, card in enumerate(cards[start:start + fits]):
+            draw_card(stdscr, 2 + j * CARD_HEIGHT, x + 1, col_w - 2, card,
+                      (i, start + j) == tuple(sel), i + 1)
+        if len(cards) > start + fits:
+            stdscr.addstr(height - 2, x + 2, f"+{len(cards) - start - fits} more", curses.A_DIM)
+    footer = error or "hjkl/arrows move · enter focus · q quit"
+    stdscr.addstr(height - 1, 1, clip(footer, width - 2), curses.A_DIM)
+    stdscr.refresh()
+
+
+def main(stdscr):
+    curses.curs_set(0)
+    curses.use_default_colors()
+    for i, color in enumerate((curses.COLOR_RED, curses.COLOR_YELLOW, curses.COLOR_GREEN), 1):
+        curses.init_pair(i, color, -1)
+    stdscr.timeout(100)
+
+    columns, sel, selected_pane, error = [[] for _ in COLUMNS], [0, 0], None, None
+    last_poll, first_poll = 0.0, True
+    while True:
+        if time.monotonic() - last_poll >= REFRESH_SECONDS:
+            last_poll = time.monotonic()
+            try:
+                columns, error = load_columns(), None
+            except Exception as exc:  # keep the board up if herdr hiccups
+                error = f"herdr: {exc}"
+            # Follow the selected agent when it changes columns.
+            found = [(i, j) for i, cards in enumerate(columns)
+                     for j, c in enumerate(cards) if c["pane_id"] == selected_pane]
+            if found:
+                sel = list(found[0])
+            elif first_poll:
+                sel = [next((i for i, cards in enumerate(columns) if cards), 0), 0]
+            first_poll = False
+
+        sel[1] = min(sel[1], max(len(columns[sel[0]]) - 1, 0))
+        current = columns[sel[0]][sel[1]] if columns[sel[0]] else None
+        selected_pane = current["pane_id"] if current else selected_pane
+        try:
+            draw(stdscr, columns, sel, error)
+        except curses.error:
+            pass  # terminal too small; redraw on next tick
+
+        key = stdscr.getch()
+        if key in (ord("q"), 27):
+            return
+        if key in (ord("h"), curses.KEY_LEFT):
+            sel = [(sel[0] - 1) % len(COLUMNS), sel[1]]
+        elif key in (ord("l"), curses.KEY_RIGHT):
+            sel = [(sel[0] + 1) % len(COLUMNS), sel[1]]
+        elif key in (ord("k"), curses.KEY_UP):
+            sel[1] = max(sel[1] - 1, 0)
+        elif key in (ord("j"), curses.KEY_DOWN):
+            sel[1] += 1
+        elif key in (10, 13, curses.KEY_ENTER) and current:
+            herdr("agent", "focus", current["pane_id"])
+            return
+        if key in (ord("h"), ord("l"), curses.KEY_LEFT, curses.KEY_RIGHT, ord("k"), ord("j"),
+                   curses.KEY_UP, curses.KEY_DOWN):
+            sel[1] = min(sel[1], max(len(columns[sel[0]]) - 1, 0))
+            cards = columns[sel[0]]
+            selected_pane = cards[sel[1]]["pane_id"] if cards else None
+
+
+if __name__ == "__main__":
+    os.environ.setdefault("ESCDELAY", "25")
+    curses.wrapper(main)
