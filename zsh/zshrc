@@ -205,6 +205,3 @@ fi
 #
 
 eval "$(starship init zsh)"
-
-# Added by AIM CLI
-export PATH="$HOME/.aim/mcp-servers:$PATH"
