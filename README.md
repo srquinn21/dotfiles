@@ -18,12 +18,18 @@ git clone <repo-url> $HOME/.dotfiles
 ~/.dotfiles/install.sh
 ```
 
+The install clones over HTTPS and creates `~/.ssh/github`. If GitHub doesn't know
+that key yet, it prints the public key. Add it at https://github.com/settings/keys and
+re-run `install.sh`; the remote then switches to SSH so you can push.
+
 ### Local Overrides
 
 Machine-specific config goes in `$HOME/.dotfiles-local`:
 
 - `zsh/*.zsh` — sourced automatically after main modules
-- `install.sh` — runs at the end of the main install
+
+This repo does not install or call the local overrides. The local repo runs
+this repo's `install.sh` itself, then applies its own setup.
 
 ### Git Identity
 

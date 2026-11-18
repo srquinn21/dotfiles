@@ -266,14 +266,62 @@ fi
 log_done
 
 ###############################################################################
-# Local overrides
+# GitHub SSH key
 ###############################################################################
 
-if [[ -x "$HOME/.dotfiles-local/install.sh" ]]; then
-  banner "Running local overrides"
-  "$HOME/.dotfiles-local/install.sh"
-  log_done
+# This repo is cloned over HTTPS, but pushing needs an SSH key registered with
+# GitHub. Creates ~/.ssh/github if missing and adds a Host entry. If GitHub
+# knows the key, the remote switches to SSH. Otherwise the public key is
+# printed so it can be registered; re-run this script afterwards.
+banner "Setting up GitHub SSH key"
+
+github_key="$HOME/.ssh/github"
+ssh_config="$HOME/.ssh/config"
+dotfiles_ssh_url="git@github.com:srquinn21/dotfiles.git"
+
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+
+if [ ! -f "$github_key" ]; then
+  echo "Creating $github_key (press Enter twice for no passphrase)"
+  ssh-keygen -t ed25519 -C "$(whoami)@$(hostname -s)" -f "$github_key"
 fi
+
+if ! grep -q -E '^Host[[:space:]]+github\.com([[:space:]]|$)' "$ssh_config" 2>/dev/null; then
+  github_host_block='Host github.com
+  IdentityFile ~/.ssh/github
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+'
+  touch "$ssh_config"
+  chmod 600 "$ssh_config"
+  # Keep the entry outside the WSSH-managed block (Amazon machines), which WSSH rewrites.
+  if grep -q '### Start of WSSH Config Block ###' "$ssh_config"; then
+    GITHUB_HOST_BLOCK="$github_host_block" awk '
+      /### Start of WSSH Config Block ###/ && !done { print ENVIRON["GITHUB_HOST_BLOCK"]; done = 1 }
+      { print }
+    ' "$ssh_config" > "$ssh_config.tmp" && mv "$ssh_config.tmp" "$ssh_config"
+  else
+    printf '\n%s\n' "$github_host_block" >> "$ssh_config"
+  fi
+fi
+
+ssh_out="$(ssh -F /dev/null -T -i "$github_key" -o IdentitiesOnly=yes -o PasswordAuthentication=no -o StrictHostKeyChecking=accept-new git@github.com 2>&1 || true)"
+if grep -q "successfully authenticated" <<<"$ssh_out"; then
+  git -C "$dotfiles_dir" remote set-url origin "$dotfiles_ssh_url"
+  echo "GitHub SSH key is registered. $dotfiles_dir now pushes over SSH."
+else
+  echo
+  echo "GitHub does not know this SSH key yet. Pushing is disabled until it does."
+  echo "  1. Add this key at https://github.com/settings/keys :"
+  echo
+  cat "$github_key.pub"
+  echo
+  echo "  2. Re-run: $dotfiles_dir/install.sh"
+fi
+log_done
 
 banner "Install Complete"
 echo "Restart your shell to apply changes."
