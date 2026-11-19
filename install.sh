@@ -49,12 +49,26 @@ bootstrap() {
     echo "$target has local changes. Using it as-is."
   fi
 
-  # stdin is this script; give the real install the terminal for its prompts.
-  exec "$target/install.sh" </dev/tty
+  # stdin is this script; give the real install the terminal for its prompts,
+  # or nothing when there is no terminal (e.g. ssh without -t).
+  if { : </dev/tty; } 2>/dev/null; then
+    exec "$target/install.sh" </dev/tty
+  else
+    exec "$target/install.sh" </dev/null
+  fi
 }
 [[ -f "${BASH_SOURCE[0]:-}" ]] || bootstrap
 
 dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Without a terminal (ssh without -t, CI), nothing may prompt: Homebrew skips
+# its "press RETURN", and new SSH keys get no passphrase.
+if [[ -t 0 ]]; then
+  interactive=true
+else
+  interactive=false
+  export NONINTERACTIVE=1
+fi
 
 ###############################################################################
 # Utilities
@@ -353,7 +367,11 @@ chmod 700 "$HOME/.ssh"
 
 if [ ! -f "$github_key" ]; then
   echo "Creating $github_key (press Enter twice for no passphrase)"
-  ssh-keygen -t ed25519 -C "$(whoami)@$(hostname -s)" -f "$github_key"
+  if $interactive; then
+    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname -s)" -f "$github_key"
+  else
+    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname -s)" -f "$github_key" -N ""
+  fi
 fi
 
 if ! grep -q -E '^Host[[:space:]]+github\.com([[:space:]]|$)' "$ssh_config" 2>/dev/null; then
