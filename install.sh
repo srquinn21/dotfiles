@@ -366,7 +366,20 @@ if ! grep -q -E '^Host[[:space:]]+github\.com([[:space:]]|$)' "$ssh_config" 2>/d
   fi
 fi
 
-ssh_out="$(ssh -F /dev/null -T -i "$github_key" -o IdentitiesOnly=yes -o PasswordAuthentication=no -o StrictHostKeyChecking=accept-new git@github.com 2>&1 || true)"
+# Trust GitHub's published host keys, fetched over HTTPS, so the first SSH
+# connection doesn't prompt. (StrictHostKeyChecking=accept-new would do this
+# too, but needs OpenSSH 7.6+, and Amazon Linux 2 ships 7.4.)
+known_hosts="$HOME/.ssh/known_hosts"
+touch "$known_hosts"
+chmod 600 "$known_hosts"
+if ! ssh-keygen -F github.com -f "$known_hosts" &>/dev/null; then
+  curl -fsSL https://api.github.com/meta \
+    | grep -oE '"(ssh-ed25519|ecdsa-sha2-nistp256|ssh-rsa) [A-Za-z0-9+/=]+"' \
+    | tr -d '"' | sed 's/^/github.com /' >> "$known_hosts" \
+    || echo "Could not fetch GitHub's host keys; the check below may fail."
+fi
+
+ssh_out="$(ssh -F /dev/null -T -i "$github_key" -o IdentitiesOnly=yes -o PasswordAuthentication=no -o BatchMode=yes -o UserKnownHostsFile="$known_hosts" git@github.com 2>&1 || true)"
 if grep -q "successfully authenticated" <<<"$ssh_out"; then
   git -C "$dotfiles_dir" remote set-url origin "$dotfiles_ssh_url"
   echo "GitHub SSH key is registered. $dotfiles_dir now pushes over SSH."
