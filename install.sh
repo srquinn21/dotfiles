@@ -431,14 +431,24 @@ if [ ! -f "$github_key" ]; then
   fi
 fi
 
+# UseKeychain is Apple-only. Linux OpenSSH rejects the whole file over it, even
+# inside a Host block that doesn't match, and IgnoreUnknown there doesn't help.
+# Earlier versions of this script wrote it on Linux too; remove those lines.
+if ! is_mac && grep -q -i -E '^[[:space:]]*(IgnoreUnknown[[:space:]]+)?UseKeychain' "$ssh_config" 2>/dev/null; then
+  sed -i -E '/^[[:space:]]*([Ii]gnore[Uu]nknown[[:space:]]+)?[Uu]se[Kk]eychain/d' "$ssh_config"
+  echo "Removed UseKeychain from $ssh_config (macOS-only option)"
+fi
+
 if ! grep -q -E '^Host[[:space:]]+github\.com([[:space:]]|$)' "$ssh_config" 2>/dev/null; then
   github_host_block='Host github.com
   IdentityFile ~/.ssh/github
   IdentitiesOnly yes
   AddKeysToAgent yes
-  IgnoreUnknown UseKeychain
-  UseKeychain yes
 '
+  if is_mac; then
+    github_host_block+='  UseKeychain yes
+'
+  fi
   touch "$ssh_config"
   chmod 600 "$ssh_config"
   # Keep the entry outside the WSSH-managed block (Amazon machines), which WSSH rewrites.
