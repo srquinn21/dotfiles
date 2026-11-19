@@ -352,6 +352,9 @@ symlink "$dotfiles_dir/btop" "$HOME/.config/btop"
 # Only config.toml: herdr keeps sockets and session state next to it.
 mkdir -p "$HOME/.config/herdr"
 symlink "$dotfiles_dir/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+# Herdr desktop app: only keys.json; the app rewrites the rest of its folder.
+mkdir -p "$HOME/.config/herdr-app"
+symlink "$dotfiles_dir/herdr-app/keys.json" "$HOME/.config/herdr-app/keys.json"
 symlink "$dotfiles_dir/mise" "$HOME/.config/mise"
 symlink "$dotfiles_dir/prettier/.prettierrc" "$HOME/.prettierrc"
 symlink "$dotfiles_dir/eslint/eslint.config.mjs" "$HOME/eslint.config.mjs"
