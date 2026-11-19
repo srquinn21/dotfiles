@@ -90,16 +90,27 @@ symlink() {
 
 # The one exception to Homebrew-first. A C toolchain is needed by Homebrew
 # itself and as Rust's linker, and the login shell has to come from the
-# system package manager so it survives Homebrew breaking.
-if [[ "$(uname)" != "Darwin" ]] && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]]; }; then
+# system package manager so it survives Homebrew breaking. Node's Linux
+# builds (installed by mise) need libatomic, which minimal images leave out.
+has_libatomic() {
+  { /sbin/ldconfig -p 2>/dev/null || ldconfig -p 2>/dev/null; } | grep -q 'libatomic\.so\.1'
+}
+if [[ "$(uname)" != "Darwin" ]] && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]] || ! has_libatomic; }; then
   banner "Installing system prerequisites"
 
   if command -v apt-get &>/dev/null; then
     sudo apt-get update
-    sudo apt-get install -y build-essential procps curl file git zsh
+    sudo apt-get install -y build-essential procps curl file git zsh libatomic1
   elif command -v dnf &>/dev/null; then
-    sudo dnf group install -y development-tools
-    sudo dnf install -y procps-ng curl file git zsh
+    # curl is left out: Amazon Linux 2023 ships curl-minimal, and installing
+    # the full curl package conflicts with it. This script needs curl already.
+    # Group ID differs between Fedora and Amazon Linux 2023; try both.
+    sudo dnf group install -y development-tools || sudo dnf group install -y "Development Tools"
+    sudo dnf install -y procps-ng file git zsh libatomic
+  elif command -v yum &>/dev/null; then
+    # Amazon Linux 2
+    sudo yum groupinstall -y "Development Tools"
+    sudo yum install -y procps-ng curl file git zsh libatomic
   else
     echo "warning: unknown package manager -- install a C toolchain and zsh yourself"
   fi
