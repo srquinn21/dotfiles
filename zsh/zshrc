@@ -43,6 +43,15 @@ export DOTFILES_LOCAL=$HOME/.dotfiles-local
 export XDG_CONFIG_HOME=$HOME/.config
 
 #
+# Remote Session
+#
+
+# Set when this shell runs on a machine reached over ssh; the prompt and the
+# tmux status bar show a cloud for it. Some ssh servers don't pass SSH_CLIENT
+# or SSH_TTY through, so local overrides may also set it.
+[[ -n $SSH_CLIENT || -n $SSH_TTY || -n $SSH_CONNECTION ]] && export DOTFILES_REMOTE=1
+
+#
 # Browser
 #
 

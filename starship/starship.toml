@@ -34,7 +34,7 @@ conflicted = " [═](bold yellow)"
 
 [custom.ssh]
 command = "echo "
-when = '[[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]]'
+when = '[[ -n "$DOTFILES_REMOTE" ]] && [[ -z "$TMUX" ]]'
 format = "[$output ]($style)"
 style = "white"
 shell = ["zsh", "-d", "-f"]
