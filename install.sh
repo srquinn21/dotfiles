@@ -141,6 +141,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
   else
     already_installed "MesloLGS Nerd Font"
   fi
+elif ! command -v fc-cache &>/dev/null; then
+  # No fontconfig means a headless box (e.g. a remote server). Fonts are
+  # rendered by the terminal on the machine you connect from, not here.
+  echo "fontconfig not found (headless machine?). Skipping font install."
 else
   font_dir="$HOME/.local/share/fonts"
   if ! fc-list | grep -qi "MesloLGS"; then
