@@ -14,7 +14,15 @@ Development environment for macOS and Linux.
 ### Install
 
 ```sh
-git clone <repo-url> $HOME/.dotfiles
+curl -fsSL https://raw.githubusercontent.com/srquinn21/dotfiles/master/install.sh | bash
+```
+
+Piped from curl, `install.sh` installs git if it's missing (Xcode command-line tools on macOS,
+apt/dnf/yum on Linux), clones (or fast-forwards) this repo at `~/.dotfiles`, and runs the clone's `install.sh`.
+If git is already installed:
+
+```sh
+git clone https://github.com/srquinn21/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install.sh
 ```
 

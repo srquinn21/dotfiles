@@ -1,5 +1,58 @@
 #!/usr/bin/env bash
+#
+# Install from a clone:
+#   ~/.dotfiles/install.sh
+#
+# Or on a machine with nothing on it yet (installs git, clones, then runs the
+# clone's copy of this script):
+#   curl -fsSL https://raw.githubusercontent.com/srquinn21/dotfiles/master/install.sh | bash
+#
+# Safe to re-run. Every step checks what is already in place.
 set -e
+
+###############################################################################
+# Bootstrap (only when piped from curl)
+###############################################################################
+
+# Piped into bash there is no file behind this script, so there is no repo yet.
+# Make sure git and a current clone exist, then hand off to the clone's copy.
+# This is a function called on the next line, so a partial download runs
+# nothing and the rest of this piped copy is never read.
+bootstrap() {
+  local repo_url="https://github.com/srquinn21/dotfiles.git"
+  local target="$HOME/.dotfiles"
+
+  if ! command -v git &>/dev/null; then
+    echo "Installing git"
+    if [[ "$(uname)" == "Darwin" ]]; then
+      # Opens a GUI installer; wait for it to finish.
+      xcode-select --install || true
+      until xcode-select -p &>/dev/null; do sleep 5; done
+    elif command -v apt-get &>/dev/null; then
+      sudo apt-get update && sudo apt-get install -y git
+    elif command -v dnf &>/dev/null; then
+      sudo dnf install -y git
+    elif command -v yum &>/dev/null; then
+      sudo yum install -y git
+    else
+      echo "No supported package manager found. Install git and re-run." >&2
+      exit 1
+    fi
+  fi
+
+  if [[ ! -d "$target/.git" ]]; then
+    git clone "$repo_url" "$target"
+  elif [[ -z "$(git -C "$target" status --porcelain)" ]]; then
+    echo "Updating $target"
+    git -C "$target" pull --ff-only || echo "Could not fast-forward $target. Using it as-is."
+  else
+    echo "$target has local changes. Using it as-is."
+  fi
+
+  # stdin is this script; give the real install the terminal for its prompts.
+  exec "$target/install.sh" </dev/tty
+}
+[[ -f "${BASH_SOURCE[0]:-}" ]] || bootstrap
 
 dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
