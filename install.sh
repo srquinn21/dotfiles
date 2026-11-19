@@ -61,6 +61,9 @@ bootstrap() {
 
 dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Some remote shells (e.g. DevSpaces over ssh) don't set USER.
+export USER="${USER:-$(id -un)}"
+
 # Without a terminal (ssh without -t, CI), nothing may prompt: Homebrew skips
 # its "press RETURN", and new SSH keys get no passphrase.
 if [[ -t 0 ]]; then
@@ -179,7 +182,9 @@ else
   if ! command -v mise &>/dev/null; then
     curl -fsSL https://mise.run | sh
   else
-    already_installed "mise"
+    # A machine image's mise can be months old, and old mise has stale
+    # download rules for some tools. Fails if a package manager owns mise.
+    mise self-update --yes || echo "warning: could not update mise ($(mise --version)). Some tools may fail to install."
   fi
   log_done
 fi
@@ -236,7 +241,8 @@ fi
 if [[ ! -x $login_zsh ]]; then
   echo "warning: no system zsh at $login_zsh -- leaving the login shell as $current_shell."
   echo "         Install zsh with your system package manager, then re-run to log in with zsh."
-elif [[ $current_shell != "$login_zsh" ]]; then
+elif [[ ! $current_shell -ef $login_zsh ]]; then
+  # -ef: /bin/zsh and /usr/bin/zsh are the same file where /bin links to /usr/bin
   # sudo because cloud users like Lightsail's `ubuntu` have no password
   if can_sudo; then
     sudo chsh -s "$login_zsh" "$USER"
