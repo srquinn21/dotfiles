@@ -38,4 +38,3 @@ brew "eza"
 
 # Formatters & Linters
 brew "stylua"
-brew "luacheck"

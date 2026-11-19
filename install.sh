@@ -93,66 +93,96 @@ already_installed() {
   echo -e "\033[0;33m$1 is already installed.\033[0m Skipping..."
 }
 
+# A real directory at the target (e.g. one a machine image created) would get
+# the link put inside it, so move it aside first.
 symlink() {
   log_info "$1" "$2"
+  if [[ -d "$2" && ! -L "$2" ]]; then
+    local backup="$2.bak.$(date +%Y%m%d%H%M%S)"
+    echo "Moving existing directory $2 to $backup"
+    mv "$2" "$backup"
+  fi
   ln -nfs "$1" "$2"
 }
+
+# sudo that never prompts without a terminal. Fails if sudo isn't allowed.
+can_sudo() {
+  command -v sudo &>/dev/null || return 1
+  sudo -n true 2>/dev/null && return 0
+  $interactive && sudo -v
+}
+
+is_mac() { [[ "$(uname)" == "Darwin" ]]; }
 
 ###############################################################################
 # System prerequisites (Linux)
 ###############################################################################
 
-# The one exception to Homebrew-first. A C toolchain is needed by Homebrew
-# itself and as Rust's linker, and the login shell has to come from the
-# system package manager so it survives Homebrew breaking. Node's Linux
-# builds (installed by mise) need libatomic, which minimal images leave out.
+# A C toolchain (Rust's linker), zsh and tmux come from the system package
+# manager, so the login shell survives anything else breaking. Node's arm64
+# Linux builds (installed by mise) also need libatomic, which minimal images
+# leave out. Machines without root (e.g. DevSpaces) are expected to ship these.
 has_libatomic() {
+  [[ "$(uname -m)" != aarch64 ]] && return 0
   { /sbin/ldconfig -p 2>/dev/null || ldconfig -p 2>/dev/null; } | grep -q 'libatomic\.so\.1'
 }
-if [[ "$(uname)" != "Darwin" ]] && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]] || ! has_libatomic; }; then
+if ! is_mac && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]] || ! command -v tmux &>/dev/null || ! has_libatomic; }; then
   banner "Installing system prerequisites"
 
-  if command -v apt-get &>/dev/null; then
+  if ! can_sudo; then
+    echo "warning: no sudo here -- skipping. Missing system packages stay missing"
+    echo "         (need a C toolchain, zsh, tmux, and libatomic on arm64)."
+  elif command -v apt-get &>/dev/null; then
     sudo apt-get update
-    sudo apt-get install -y build-essential procps curl file git zsh libatomic1
+    sudo apt-get install -y build-essential procps curl file git zsh tmux libatomic1
   elif command -v dnf &>/dev/null; then
     # curl is left out: Amazon Linux 2023 ships curl-minimal, and installing
     # the full curl package conflicts with it. This script needs curl already.
     # Group ID differs between Fedora and Amazon Linux 2023; try both.
     sudo dnf group install -y development-tools || sudo dnf group install -y "Development Tools"
-    sudo dnf install -y procps-ng file git zsh libatomic
+    sudo dnf install -y procps-ng file git zsh tmux libatomic
   elif command -v yum &>/dev/null; then
     # Amazon Linux 2
     sudo yum groupinstall -y "Development Tools"
-    sudo yum install -y procps-ng curl file git zsh libatomic
+    sudo yum install -y procps-ng curl file git zsh tmux libatomic
   else
-    echo "warning: unknown package manager -- install a C toolchain and zsh yourself"
+    echo "warning: unknown package manager -- install a C toolchain, zsh and tmux yourself"
   fi
 
   log_done
 fi
 
 ###############################################################################
-# Homebrew
+# Packages
 ###############################################################################
 
-banner "Installing Homebrew"
+# macOS: Homebrew, from the Brewfile.
+# Linux: mise, from the os = ["linux"] entries in mise/config.toml. Homebrew
+# on Linux needs root to create /home/linuxbrew, which machines like DevSpaces
+# don't give you. mise installs everything under $HOME.
+if is_mac; then
+  banner "Installing Homebrew"
 
-if ! command -v brew &>/dev/null; then
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-if [[ -f /opt/homebrew/bin/brew ]]; then
+  if ! command -v brew &>/dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
   eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  log_done
+
+  banner "Installing packages"
+  brew bundle --file="$dotfiles_dir/Brewfile"
+  log_done
+else
+  banner "Installing mise"
+
+  export PATH="$HOME/.local/bin:$PATH"
+  if ! command -v mise &>/dev/null; then
+    curl -fsSL https://mise.run | sh
+  else
+    already_installed "mise"
+  fi
+  log_done
 fi
-
-log_done
-
-banner "Installing packages"
-brew bundle --file="$dotfiles_dir/Brewfile"
-log_done
 
 ###############################################################################
 # Nerd Font (MesloLGS NF)
@@ -160,7 +190,7 @@ log_done
 
 banner "Installing Nerd Font (MesloLGS NF)"
 
-if [[ "$(uname)" == "Darwin" ]]; then
+if is_mac; then
   if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
     brew install --cask font-meslo-lg-nerd-font
   else
@@ -208,7 +238,11 @@ if [[ ! -x $login_zsh ]]; then
   echo "         Install zsh with your system package manager, then re-run to log in with zsh."
 elif [[ $current_shell != "$login_zsh" ]]; then
   # sudo because cloud users like Lightsail's `ubuntu` have no password
-  sudo chsh -s "$login_zsh" "$USER"
+  if can_sudo; then
+    sudo chsh -s "$login_zsh" "$USER"
+  else
+    echo "warning: no sudo here -- leaving the login shell as $current_shell."
+  fi
 else
   already_installed "zsh (default shell)"
 fi
@@ -323,15 +357,32 @@ log_done
 
 banner "Configuring Rust"
 
-if ! command -v rustup &>/dev/null; then
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+if command -v rustup &>/dev/null; then
+  already_installed "rustup"
+elif command -v rustup-init &>/dev/null; then
+  # From Homebrew
   rustup-init -y --no-modify-path
   source "$HOME/.cargo/env"
 else
-  already_installed "rustup"
+  curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path
+  source "$HOME/.cargo/env"
 fi
 
 rustup component add clippy rust-analyzer 2>/dev/null
 
+log_done
+
+###############################################################################
+# mise tools
+###############################################################################
+
+# Runtimes (node, python) everywhere, plus the Linux CLI tools.
+banner "Installing mise tools"
+
+mise trust --quiet "$dotfiles_dir/mise/config.toml"
+mise install --yes
+export PATH="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims:$PATH"
 log_done
 
 ###############################################################################
@@ -344,7 +395,7 @@ if command -v npm &>/dev/null; then
   npm ls -g prettier &>/dev/null || npm install -g prettier
   npm ls -g eslint &>/dev/null || npm install -g eslint
 else
-  echo "npm not found — skipping global installs (run 'mise install' first)"
+  echo "npm not found -- skipping global installs"
 fi
 log_done
 
