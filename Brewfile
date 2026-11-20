@@ -17,6 +17,7 @@ cask "obsidian"
 brew "herdr"
 cask "herdr-app" if OS.mac?
 brew "git"
+brew "gh"
 brew "mise"
 brew "rustup"
 brew "zig"
