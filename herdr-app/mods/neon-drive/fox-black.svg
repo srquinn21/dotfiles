@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="38" viewBox="0 0 120 38">
+  <!-- A stylised 1988 Fox-body hatchback GT, facing right: long flat hood,
+       upright windshield, flat roof, sloped hatch with a rear spoiler, aero
+       headlights, ribbed ground-effects cladding with a side scoop. -->
+  <defs>
+    <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3648"/><stop offset="0.55" stop-color="#14121c"/><stop offset="1" stop-color="#07060b"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7aefff"/><stop offset="1" stop-color="#14306e"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="35.5" rx="54" ry="2.2" fill="#2de2ff" opacity="0.5"/>
+  <!-- body -->
+  <path d="M3 30 L3 21.5 L6 18 L16 16.8 L37 9.2 L61 9 L73.5 16.2 L104 17.6 L112 18.6 L115.5 21 L117 27.5 L115 30 Z"
+        fill="url(#paint)" stroke="#ff2bd6" stroke-width="0.8" stroke-linejoin="round"/>
+  <!-- glass: hatch and quarter window, door window -->
+  <path d="M17.5 16.6 L37.6 10.2 L47.5 10.2 L47.5 16.4 Z" fill="url(#glass)"/>
+  <path d="M50 10.2 L60.4 10.2 L71 16.2 L50 16.2 Z" fill="url(#glass)"/>
+  <path d="M47.5 10.2 L50 10.2 L50 16.4 L47.5 16.4 Z" fill="#1a0a10"/>
+  <path d="M38 13 L46.5 13" stroke="#0c1a3a" stroke-width="0.6"/>
+  <!-- mirror, door seam, body crease -->
+  <path d="M70.5 15.4 L74 15.4 L74 17 L71.5 17 Z" fill="#1a0a10"/>
+  <path d="M50 16.4 L50 25 M73 16.6 L73.5 25" stroke="#000000" stroke-width="0.6"/>
+  <path d="M5 21 L114 21.4" stroke="#ff2bd6" stroke-width="0.8"/>
+  <!-- rear spoiler on the hatch -->
+  <path d="M4 16.2 L15 15.2 L16 16.6 L6 17.6 Z" fill="#14121c" stroke="#ff2bd6" stroke-width="0.6"/>
+  <!-- ribbed lower cladding and the scoop ahead of the rear wheel -->
+  <path d="M4 25 L116 25.4 L115 30 L3 30 Z" fill="#050508"/>
+  <path d="M6 26.5 L114 26.8 M6 28 L114 28.3" stroke="#2a2a3a" stroke-width="0.5"/>
+  <path d="M37 22.6 L45 22.6 L45 25 L37 25 Z" fill="#050508"/>
+  <path d="M39 22.8 L39 24.8 M41 22.8 L41 24.8 M43 22.8 L43 24.8" stroke="#3a3a48" stroke-width="0.6"/>
+  <!-- louvred tail light, aero headlight and amber marker -->
+  <rect x="2.6" y="18.6" width="3.2" height="5.4" rx="0.6" fill="#ff1f3d"/>
+  <path d="M2.8 20.2 H5.6 M2.8 21.6 H5.6 M2.8 23 H5.6" stroke="#7a0010" stroke-width="0.4"/>
+  <path d="M107.5 18.4 L112.6 19 L115.2 21.4 L109 21.6 Z" fill="#fff6c2"/>
+  <path d="M104 18.2 L107.2 18.4 L108.6 21.6 L105 21.6 Z" fill="#ffb01f"/>
+  <!-- front air dam with fog lights -->
+  <path d="M106 27.6 L117 27.6 L115 30 L106 30 Z" fill="#111118"/>
+  <rect x="109" y="28" width="3" height="1.2" rx="0.4" fill="#fff6c2" opacity="0.9"/>
+  <!-- wheel arches -->
+  <circle cx="26" cy="29" r="8.6" fill="#07040c"/>
+  <circle cx="94" cy="29" r="8.6" fill="#07040c"/>
+</svg>

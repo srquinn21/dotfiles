@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="30" viewBox="0 0 600 30">
+<defs><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0f63"/><stop offset="1" stop-color="#0a0514"/></linearGradient></defs>
+<rect y="10" width="600" height="20" fill="url(#sea)"/>
+<path d="M0 10 L600 10" stroke="#ff6be3" stroke-width="1" opacity="0.8"/>
+<path d="M261 13 L278 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M542 13 L548 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M476 13 L489 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M53 13 L64 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M115 13 L132 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M480 13 L493 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M389 13 L412 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M104 13 L128 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M255 13 L261 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M221 13 L240 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M286 13 L297 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M398 13 L409 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M73 13 L83 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M455 13 L465 13" stroke="#ff6be3" stroke-width="1" opacity="0.7"/>
+<path d="M135 17 L141 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M5 17 L17 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M220 17 L231 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M170 17 L185 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M321 17 L333 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M552 17 L564 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M186 17 L198 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M392 17 L407 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M22 17 L39 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M424 17 L435 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M149 17 L163 17" stroke="#2de2ff" stroke-width="1" opacity="0.6"/>
+<path d="M66 21 L82 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M308 21 L332 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M3 21 L19 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M67 21 L82 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M363 21 L378 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M492 21 L508 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M189 21 L210 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M483 21 L494 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M58 21 L72 21" stroke="#c13cff" stroke-width="1" opacity="0.6"/>
+<path d="M23 26 L40 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M413 26 L419 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M562 26 L581 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M374 26 L392 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M9 26 L29 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M47 26 L58 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M201 26 L210 26" stroke="#2de2ff" stroke-width="1" opacity="0.45"/>
+<path d="M420 14 L438 14 L435 17 L423 17 Z" fill="#ff2bd6"/>
+<path d="M429 14 L429 3" stroke="#ffd6f6" stroke-width="1"/>
+<path d="M430 4 L437 13 L430 13 Z" fill="#2de2ff" opacity="0.9"/>
+<path d="M428 5 L422 13 L428 13 Z" fill="#ffd6f6" opacity="0.8"/>
+</svg>

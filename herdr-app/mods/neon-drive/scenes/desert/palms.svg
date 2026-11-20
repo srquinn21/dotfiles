@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="44" viewBox="0 0 600 44">
+<path d="M0 44 L0 40 Q75 34 150 40 T300 40 T450 40 T600 40 L600 44 Z" fill="#0d0420"/>
+<path d="M60 44 Q61.2 27.0 64 10" fill="none" stroke="#0d0420" stroke-width="3"/>
+<path d="M64 10 Q55.6 10 50 16" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q58.6 3 55 9" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q64.0 0 64 6" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q69.4 3 73 9" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q72.4 10 78 16" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q61.6 12 60 18" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M64 10 Q67.0 12 69 18" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M210 44 Q209.1 30.0 207 16" fill="none" stroke="#0d0420" stroke-width="3"/>
+<path d="M207 16 Q198.6 16 193 22" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q201.6 9 198 15" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q207.0 6 207 12" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q212.4 9 216 15" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q215.4 16 221 22" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q204.6 18 203 24" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M207 16 Q210.0 18 212 24" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M380 44 Q381.5 25.0 385 6" fill="none" stroke="#0d0420" stroke-width="3"/>
+<path d="M385 6 Q376.6 6 371 12" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q379.6 -1 376 5" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q385.0 -4 385 2" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q390.4 -1 394 5" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q393.4 6 399 12" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q382.6 8 381 14" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M385 6 Q388.0 8 390 14" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M520 44 Q518.8 29.0 516 14" fill="none" stroke="#0d0420" stroke-width="3"/>
+<path d="M516 14 Q507.6 14 502 20" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q510.6 7 507 13" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q516.0 4 516 10" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q521.4 7 525 13" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q524.4 14 530 20" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q513.6 16 512 22" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M516 14 Q519.0 16 521 22" fill="none" stroke="#0d0420" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

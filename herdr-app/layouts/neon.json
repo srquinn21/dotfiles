@@ -183,7 +183,10 @@
             "px": 90
           },
           "content": {
-            "mod": "neon-drive"
+            "mod": "neon-drive",
+            "props": {
+              "scene": "city"
+            }
           }
         },
         {
