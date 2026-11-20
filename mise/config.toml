@@ -1,6 +1,6 @@
 [tools]
 node = "lts"
-python = ["3.12", "3.11", "3.10", "3.9", "3.8"]
+python = ["3.12", "3.11", "3.10", "3.9"]
 
 # Linux only. On macOS these come from the Brewfile. Homebrew on Linux needs
 # root, so mise installs them under $HOME instead. Keep in step with the
