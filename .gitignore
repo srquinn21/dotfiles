@@ -14,3 +14,7 @@ vim/init.vim
 vim/plugged/*
 
 tags
+
+# Herdr desktop app writes these into every mod folder
+herdr-app/mods/*/gpui-kit.d.ts
+herdr-app/mods/*/jsconfig.json
