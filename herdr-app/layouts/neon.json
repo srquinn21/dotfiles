@@ -224,7 +224,7 @@
     16
   ],
   "theme": "neon",
-  "terminal_opacity": 0.94,
+  "terminal_opacity": 1,
   "preview": "layouts/neon.svg",
   "colors": {
     "chrome": "#00000000",
