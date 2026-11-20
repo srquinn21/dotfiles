@@ -122,11 +122,11 @@ is_mac() { [[ "$(uname)" == "Darwin" ]]; }
 ###############################################################################
 
 # A C toolchain (Rust's linker), zsh and tmux come from the system package
-# manager, so the login shell survives anything else breaking. Node's arm64
-# Linux builds (installed by mise) also need libatomic, which minimal images
-# leave out. Machines without root (e.g. DevSpaces) are expected to ship these.
+# manager, so the login shell survives anything else breaking. Node's Linux
+# builds (installed by mise), x86_64 and arm64 alike, also need libatomic,
+# which minimal images leave out. Machines without root (e.g. DevSpaces) are
+# expected to ship these.
 has_libatomic() {
-  [[ "$(uname -m)" != aarch64 ]] && return 0
   { /sbin/ldconfig -p 2>/dev/null || ldconfig -p 2>/dev/null; } | grep -q 'libatomic\.so\.1'
 }
 if ! is_mac && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]] || ! command -v tmux &>/dev/null || ! has_libatomic; }; then
@@ -134,7 +134,7 @@ if ! is_mac && { ! command -v cc &>/dev/null || [[ ! -x /usr/bin/zsh ]] || ! com
 
   if ! can_sudo; then
     echo "warning: no sudo here -- skipping. Missing system packages stay missing"
-    echo "         (need a C toolchain, zsh, tmux, and libatomic on arm64)."
+    echo "         (need a C toolchain, zsh, tmux, and libatomic)."
   elif command -v apt-get &>/dev/null; then
     sudo apt-get update
     sudo apt-get install -y build-essential procps curl file git zsh tmux libatomic1
