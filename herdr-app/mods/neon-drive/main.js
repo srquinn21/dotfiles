@@ -56,7 +56,8 @@ const TRANSITIONS = {
 
 // Structures drawn side-on over the whole strip, `w` px wide, as tinted
 // pieces back to front ([file, color, pulse?], pulse: an opacity loop
-// [from, to, period]), then text `labels`. The scene's seam rides at `seam`
+// [from, to, period]), then text `labels`; an optional `back` (its own
+// pieces and labels) is drawn behind the road and the car, over the scenery. The scene's seam rides at `seam`
 // px from the left, behind a part that is solid top to bottom. `solid` lists
 // the [x0, x1] spans that hide the car (its wheels pause behind them).
 const COVERS = {
@@ -73,24 +74,34 @@ const COVERS = {
     ],
   },
   truckstop: {
-    w: 280, seam: 25, solid: [[20, 30], [118, 126], [150, 162], [210, 222], [258, 266]],
+    // The Neon Diner from the billboard: the diner and a parked semi behind
+    // the road (`back`), the pylon sign at the roadside in front.
+    w: 300, seam: 25, solid: [[20, 30]],
+    back: {
+      pieces: [
+        ["scenes/truckstop/trailer.svg", "#2a1f45"],
+        ["scenes/truckstop/trailerstripe.svg", PINK],
+        ["scenes/truckstop/cab.svg", "#3a2f58"],
+        ["scenes/truckstop/cabglass.svg", CYAN],
+        ["scenes/truckstop/tyres.svg", "#05030a"],
+        ["scenes/truckstop/diner.svg", "#1a1030"],
+        ["scenes/truckstop/chrome.svg", "#a8adc2"],
+        ["scenes/truckstop/windows.svg", "#ffd27a"],
+        ["scenes/truckstop/door.svg", AMBER],
+        ["scenes/truckstop/roofsign.svg", "#12062a"],
+        ["scenes/truckstop/roofborder.svg", PINK, [0.7, 1, 1300]],
+        ["scenes/truckstop/roofcup.svg", CYAN],
+      ],
+      labels: [{ x: 233, y: 7, size: 8, color: PINK, text: "NEON DINER" }],
+    },
     pieces: [
-      ["scenes/truckstop/shade.svg", "#05030a77"],
       ["scenes/truckstop/pole.svg", "#3a3f4b"],
       ["scenes/truckstop/signbox.svg", "#12062a"],
       ["scenes/truckstop/signborder.svg", AMBER, [0.7, 1, 1100]],
-      ["scenes/truckstop/canopy.svg", "#1a1030"],
-      ["scenes/truckstop/stripe.svg", CYAN],
-      ["scenes/truckstop/lights.svg", "#fff6c2"],
-      ["scenes/truckstop/pillars.svg", "#2a1f45"],
-      ["scenes/truckstop/pumps.svg", "#4a3a6a"],
-      ["scenes/truckstop/screens.svg", AMBER],
-      ["scenes/truckstop/hoses.svg", "#0d0420"],
     ],
     labels: [
       { x: 10, y: 4, size: 10, color: AMBER, text: "TRUCK STOP" },
       { x: 10, y: 15, size: 7, color: "#e6e9ef", text: "DIESEL · CAFE · 24H" },
-      { x: 176, y: 22, size: 7, color: CYAN, text: "DIESEL" },
     ],
   },
   overpass: {
@@ -134,7 +145,7 @@ const COVERS = {
     ],
     labels: [
       { x: 54, y: 9, size: 15, color: PINK, text: "NEON DINER" },
-      { x: 56, y: 28, size: 9, color: CYAN, text: "OPEN 24 HRS · EAT" },
+      { x: 56, y: 28, size: 9, color: CYAN, text: "TRUCK STOP · NEXT EXIT ▸" },
     ],
   },
 };
@@ -447,9 +458,10 @@ export default class NeonDrive extends View {
 
   // The tunnel or overpass of an arriving leg, over everything, its seam
   // point travelling with the leg's edge.
-  renderCover(leg) {
-    const c = COVERS[leg.cover.kind];
-    return div().id(`cover-${leg.id}`).absolute().top(0).w(c.w).h(H)
+  renderCover(leg, which = "front") {
+    const whole = COVERS[leg.cover.kind];
+    const c = which === "back" ? { ...whole.back, w: whole.w } : whole;
+    return div().id(`cover-${which}-${leg.id}`).absolute().top(0).w(c.w).h(H)
       .left(leg.arrived ? -c.w : leg.cover.w).transition("left", { duration: leg.cover.ms, easing: "linear" })
       .children(c.pieces.map(([f, color, pulse]) =>
         div().absolute().top(0).left(0).child(svg(ASSET(f)).w(c.w).h(H).text_color(color))
@@ -502,6 +514,7 @@ export default class NeonDrive extends View {
       })
       .relative().size_full().overflow_hidden().bg("#0b0320")
       .child(sky)
+      .children(this.legs.filter((leg) => leg.cover && COVERS[leg.cover.kind].back).map((leg) => this.renderCover(leg, "back")))
       .child(ground)
       .child(car)
       .children(this.legs.filter((leg) => leg.cover).map((leg) => this.renderCover(leg)));
