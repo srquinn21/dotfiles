@@ -352,9 +352,18 @@ symlink "$dotfiles_dir/btop" "$HOME/.config/btop"
 # Only config.toml: herdr keeps sockets and session state next to it.
 mkdir -p "$HOME/.config/herdr"
 symlink "$dotfiles_dir/herdr/config.toml" "$HOME/.config/herdr/config.toml"
-# Herdr desktop app: only keys.json; the app rewrites the rest of its folder.
-mkdir -p "$HOME/.config/herdr-app"
+# Herdr desktop app: only keys.json and our own mods, layouts and themes; the app rewrites the rest of its folder.
+mkdir -p "$HOME/.config/herdr-app/mods"
 symlink "$dotfiles_dir/herdr-app/keys.json" "$HOME/.config/herdr-app/keys.json"
+for mod in "$dotfiles_dir"/herdr-app/mods/*/; do
+  mod="${mod%/}"
+  symlink "$mod" "$HOME/.config/herdr-app/mods/${mod##*/}"
+done
+mkdir -p "$HOME/.config/herdr-app/layouts" "$HOME/.config/herdr-app/themes"
+for file in "$dotfiles_dir"/herdr-app/layouts/* "$dotfiles_dir"/herdr-app/themes/*; do
+  dir="${file%/*}"
+  symlink "$file" "$HOME/.config/herdr-app/${dir##*/}/${file##*/}"
+done
 symlink "$dotfiles_dir/mise" "$HOME/.config/mise"
 symlink "$dotfiles_dir/prettier/.prettierrc" "$HOME/.prettierrc"
 symlink "$dotfiles_dir/eslint/eslint.config.mjs" "$HOME/eslint.config.mjs"
