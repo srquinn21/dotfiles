@@ -4,11 +4,11 @@ Development environment for macOS and Linux.
 
 ### What's Included
 
-- **Shell**: zsh + [Prezto](https://github.com/sorin-ionescu/prezto) with vi keybindings
+- **Shell**: zsh + [zinit](https://github.com/zdharma-continuum/zinit) + [Starship](https://starship.rs/) with vi keybindings
 - **Editor**: [Neovim](https://neovim.io/) with native LSP, Treesitter, Telescope, lazy.nvim
 - **Terminal**: [Ghostty](https://ghostty.org/) with One Double Dark theme
 - **Multiplexer**: tmux with [Catppuccin](https://github.com/catppuccin/tmux) theme (via TPM)
-- **Tools**: mise (node/python), ripgrep, fd, fzf, bat, glow, eza
+- **Tools**: mise (node, global python), uv (python projects), ripgrep, fd, fzf, bat, glow, eza
 - **Languages**: TypeScript, Rust (rustup + rust-analyzer + clippy)
 
 ### Install
@@ -26,11 +26,10 @@ git clone https://github.com/srquinn21/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install.sh
 ```
 
-On macOS, packages come from the `Brewfile` through Homebrew. On Linux, Homebrew
-needs root, so the command-line tools come from mise instead (the `os = ["linux"]`
-entries in `mise/config.toml`), installed under `$HOME`. zsh, tmux and a C toolchain
-come from the system package manager when sudo is available; without it the install
-skips that step and expects the machine to have them.
+Packages come from the `Brewfile` through Homebrew on both macOS and Linux
+(Linuxbrew, which needs sudo). mise manages node and a global python; uv handles
+per-project python versions and virtualenvs (`uv init`, `uv add`, `uv run`).
+On Linux, a C toolchain, zsh and tmux come from the system package manager.
 
 The install clones over HTTPS and creates `~/.ssh/github`. If GitHub doesn't know
 that key yet, it prints the public key. Add it at https://github.com/settings/keys and

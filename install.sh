@@ -61,7 +61,7 @@ bootstrap() {
 
 dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Some remote shells (e.g. DevSpaces over ssh) don't set USER.
+# Some environments (containers, bare ssh sessions) don't set USER.
 export USER="${USER:-$(id -un)}"
 
 # Without a terminal (ssh without -t, CI), nothing may prompt: Homebrew skips
@@ -121,11 +121,10 @@ is_mac() { [[ "$(uname)" == "Darwin" ]]; }
 # System prerequisites (Linux)
 ###############################################################################
 
-# A C toolchain (Rust's linker), zsh and tmux come from the system package
-# manager, so the login shell survives anything else breaking. Node's Linux
-# builds (installed by mise), x86_64 and arm64 alike, also need libatomic,
-# which minimal images leave out. Machines without root (e.g. DevSpaces) are
-# expected to ship these.
+# A C toolchain (needed by Homebrew and as Rust's linker) and zsh come from
+# the system package manager, so the login shell survives Homebrew breaking.
+# Node's Linux builds (installed by mise), x86_64 and arm64 alike, also need
+# libatomic, which minimal images leave out.
 has_libatomic() {
   { /sbin/ldconfig -p 2>/dev/null || ldconfig -p 2>/dev/null; } | grep -q 'libatomic\.so\.1'
 }
@@ -159,35 +158,24 @@ fi
 # Packages
 ###############################################################################
 
-# macOS: Homebrew, from the Brewfile.
-# Linux: mise, from the os = ["linux"] entries in mise/config.toml. Homebrew
-# on Linux needs root to create /home/linuxbrew, which machines like DevSpaces
-# don't give you. mise installs everything under $HOME.
+# Homebrew on both macOS and Linux, from the Brewfile. Linuxbrew lives in
+# /home/linuxbrew, so its installer needs sudo.
+banner "Installing Homebrew"
+
 if is_mac; then
-  banner "Installing Homebrew"
-
-  if ! command -v brew &>/dev/null; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  fi
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-  log_done
-
-  banner "Installing packages"
-  brew bundle --file="$dotfiles_dir/Brewfile"
-  log_done
+  brew_prefix=/opt/homebrew
 else
-  banner "Installing mise"
-
-  export PATH="$HOME/.local/bin:$PATH"
-  if ! command -v mise &>/dev/null; then
-    curl -fsSL https://mise.run | sh
-  else
-    # A machine image's mise can be months old, and old mise has stale
-    # download rules for some tools. Fails if a package manager owns mise.
-    mise self-update --yes || echo "warning: could not update mise ($(mise --version)). Some tools may fail to install."
-  fi
-  log_done
+  brew_prefix=/home/linuxbrew/.linuxbrew
 fi
+if [[ ! -x $brew_prefix/bin/brew ]]; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+eval "$("$brew_prefix/bin/brew" shellenv)"
+log_done
+
+banner "Installing packages"
+brew bundle --file="$dotfiles_dir/Brewfile"
+log_done
 
 ###############################################################################
 # Nerd Font (MesloLGS NF)
@@ -395,7 +383,7 @@ log_done
 # mise tools
 ###############################################################################
 
-# Runtimes (node, python) everywhere, plus the Linux CLI tools.
+# Language runtimes (node, python).
 banner "Installing mise tools"
 
 mise trust --quiet "$dotfiles_dir/mise/config.toml"
@@ -463,15 +451,7 @@ if ! grep -q -E '^Host[[:space:]]+github\.com([[:space:]]|$)' "$ssh_config" 2>/d
   fi
   touch "$ssh_config"
   chmod 600 "$ssh_config"
-  # Keep the entry outside the WSSH-managed block (Amazon machines), which WSSH rewrites.
-  if grep -q '### Start of WSSH Config Block ###' "$ssh_config"; then
-    GITHUB_HOST_BLOCK="$github_host_block" awk '
-      /### Start of WSSH Config Block ###/ && !done { print ENVIRON["GITHUB_HOST_BLOCK"]; done = 1 }
-      { print }
-    ' "$ssh_config" > "$ssh_config.tmp" && mv "$ssh_config.tmp" "$ssh_config"
-  else
-    printf '\n%s\n' "$github_host_block" >> "$ssh_config"
-  fi
+  printf '\n%s\n' "$github_host_block" >> "$ssh_config"
 fi
 
 # Trust GitHub's published host keys, fetched over HTTPS, so the first SSH

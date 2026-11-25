@@ -1,6 +1,3 @@
-unset DOCKER_HOST
-unset DOCKER_TLS_VERIFY
-
 alias dka='docker kill $(docker ps -aq)'
 alias dra='docker rm $(docker ps -aq)'
 alias dps='docker ps'

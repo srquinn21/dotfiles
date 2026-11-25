@@ -82,10 +82,8 @@ fi
 typeset -gU cdpath fpath mailpath path
 
 path=(
-  $HOME/bin
   $HOME/.local/bin
   $DOTFILES/bin
-  $DOTFILES_LOCAL/bin
   /usr/local/sbin
   /usr/local/bin
   $path
@@ -151,32 +149,6 @@ if [ -d $DOTFILES_LOCAL/zsh ]; then
 fi
 
 #
-# Aliases
-#
-
-[ -r ~/.sh_aliases ] && source ~/.sh_aliases
-[ -r ~/.zsh_aliases ] && source ~/.zsh_aliases
-
-if [[ "$OSTYPE" == darwin* ]]; then
-  [ -f ~/.osx_aliases ] && source ~/.osx_aliases
-  if [ -d ~/.osx_aliases.d ]; then
-    for alias_file in ~/.osx_aliases.d/*; do
-      source $alias_file
-    done
-  fi
-fi
-
-#
-# Custom completions
-#
-
-if [ -d ~/.zsh-completions ]; then
-  for completion in ~/.zsh-completions/*; do
-    [ -n "$completion" ] && source "$completion"
-  done
-fi
-
-#
 # Completion styles
 #
 
@@ -184,17 +156,6 @@ zstyle ':completion:*' accept-exact '*(N)'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)*==34=34}:${(s.:.)LS_COLORS}")';
-
-#
-# Overrides
-#
-
-mkdir -p ~/.zshrc.d
-if [ -n "$(/bin/ls ~/.zshrc.d)" ]; then
-  for dotfile in ~/.zshrc.d/*; do
-    [ -r "${dotfile}" ] && source "${dotfile}"
-  done
-fi
 
 #
 # Compile completions in background
@@ -206,8 +167,6 @@ fi
     zcompile "$zcompdump"
   fi
 } &!
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 #
 # Starship prompt

@@ -11,7 +11,7 @@ brew "btop"
 
 # Editor
 brew "neovim"
-cask "obsidian"
+cask "obsidian" if OS.mac?
 
 # Development
 brew "herdr"
@@ -19,18 +19,18 @@ cask "herdr-app" if OS.mac?
 brew "git"
 brew "gh"
 brew "mise"
+brew "uv"
 brew "rustup"
 brew "zig"
 tap "oven-sh/bun"
 brew "bun"
-cask "claude-code"
+cask "claude-code" if OS.mac?
 brew "ffmpeg"
 
 # Search & Navigation
 brew "ripgrep"
 brew "fd"
 brew "fzf"
-brew "tree"
 brew "zoxide"
 
 # File Viewing
