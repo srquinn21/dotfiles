@@ -20,3 +20,4 @@ glow = { version = "latest", os = ["linux"] }
 eza = { version = "latest", os = ["linux"] }
 stylua = { version = "latest", os = ["linux"] }
 gh = { version = "latest", os = ["linux"] }
+ffmpeg = { version = "latest", os = ["linux"] }

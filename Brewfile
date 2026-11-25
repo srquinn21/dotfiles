@@ -24,6 +24,7 @@ brew "zig"
 tap "oven-sh/bun"
 brew "bun"
 cask "claude-code"
+brew "ffmpeg"
 
 # Search & Navigation
 brew "ripgrep"
